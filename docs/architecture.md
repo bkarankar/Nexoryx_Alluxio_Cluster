@@ -1,8 +1,3 @@
-# Architecture
+# Nexoryx_Alluxio_Cluster Architecture
 
-Clients -> Ingress -> Alluxio Master -> Alluxio Workers
-
-Integrated:
-- Spark
-- Trino
-- MinIO
+Production-grade infrastructure automation.
