@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: alluxio-worker
+  namespace: nexoryx-alluxio
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: alluxio-worker
+  template:
+    metadata:
+      labels:
+        app: alluxio-worker
+    spec:
+      containers:
+      - name: alluxio-worker
+        image: alluxio/alluxio:2.9.4
+        command:
+        - /opt/alluxio/bin/alluxio-start.sh
+        - worker
+        env:
+        - name: ALLUXIO_MASTER_HOSTNAME
+          value: alluxio-master
+        ports:
+        - containerPort: 29999
+        resources:
+          requests:
+            cpu: "500m"
+            memory: "2Gi"
+          limits:
+            cpu: "2"
+            memory: "4Gi"

@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: alluxio-master
+  namespace: nexoryx-alluxio
+spec:
+  serviceName: alluxio-master
+  replicas: 1
+  selector:
+    matchLabels:
+      app: alluxio-master
+  template:
+    metadata:
+      labels:
+        app: alluxio-master
+    spec:
+      containers:
+      - name: alluxio-master
+        image: alluxio/alluxio:2.9.4
+        command:
+        - /opt/alluxio/bin/alluxio-start.sh
+        - master
+        ports:
+        - containerPort: 19999
+        - containerPort: 19998
+        volumeMounts:
+        - name: config
+          mountPath: /opt/alluxio/conf
+        readinessProbe:
+          tcpSocket:
+            port: 19999
+          initialDelaySeconds: 20
+        livenessProbe:
+          tcpSocket:
+            port: 19999
+          initialDelaySeconds: 60
+      volumes:
+      - name: config
+        configMap:
+          name: alluxio-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: alluxio-master
+  namespace: nexoryx-alluxio
+spec:
+  selector:
+    app: alluxio-master
+  ports:
+  - name: rpc
+    port: 19998
+  - name: web
+    port: 19999

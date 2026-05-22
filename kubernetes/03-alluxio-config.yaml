@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: alluxio-config
+  namespace: nexoryx-alluxio
+data:
+  alluxio-site.properties: |
+    alluxio.master.hostname=alluxio-master
+    alluxio.worker.memory.size=1GB
+    alluxio.user.file.writetype.default=CACHE_THROUGH
+    alluxio.underfs.address=s3a://alluxio/
+    s3a.accessKeyId=admin
+    s3a.secretKey=CHANGE_ME
+    s3a.endpoint=http://minio:9000

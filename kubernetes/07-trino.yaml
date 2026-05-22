@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: trino
+  namespace: nexoryx-alluxio
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: trino
+  template:
+    metadata:
+      labels:
+        app: trino
+    spec:
+      containers:
+      - name: trino
+        image: trinodb/trino:448
+        ports:
+        - containerPort: 8080
+        readinessProbe:
+          httpGet:
+            path: /v1/info
+            port: 8080
+          initialDelaySeconds: 20
+        livenessProbe:
+          httpGet:
+            path: /v1/info
+            port: 8080
+          initialDelaySeconds: 60
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: trino
+  namespace: nexoryx-alluxio
+spec:
+  selector:
+    app: trino
+  ports:
+  - port: 8080
